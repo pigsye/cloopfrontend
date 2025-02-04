@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <title>Cloop - Chat</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFF0E3; 
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #C75B7A;
+            color: #FFFFFF;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            font-family: 'Joan', serif;
+            font-size: 36px;
+            font-weight: normal;
+            color: #FFFFFF;
+            text-transform: capitalize;
+        }
+
+        header nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header nav a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        header nav .search-icon, header nav .user-profile {
+            width: 22px;
+            cursor: pointer;
+        }
+
+        header nav .trade-btn {
+            background-color: #F6C6C6;
+            border: none;
+            padding: 10px 20px;
+            color: #C75B7A;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        header nav .trade-btn:hover {
+            background-color: #C75B7A;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Chat List */
+        .chat-list {
+            width: 30%;
+            background-color: #F6C6C6;
+            padding: 20px;
+            border-right: 2px solid #C75B7A;
+            overflow-y: auto;
+        }
+
+        .chat-list-item {
+            padding: 15px;
+            background-color: #FFE4E1;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-list-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chat-list-item:hover {
+            background-color: #C75B7A;
+            color: #FFFFFF;
+        }
+
+        /* Chat Box */
+        .chat-box {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chat-header {
+            background-color: #C75B7A;
+            color: #FFFFFF;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            background-color: #FFE4E1;
+            padding: 10px;
+            flex: 1;
+            overflow-y: auto;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 20px;
+            margin: 10px 0;
+            width: fit-content;
+        }
+
+        .message.sent {
+            background-color: #C75B7A;
+            color: #FFFFFF;
+            align-self: flex-end;
+        }
+
+        .message.received {
+            background-color: #FFFFFF;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        .message-input {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .message-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+        }
+
+        .message-input button {
+            background-color: #C75B7A;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Media Queries */
+        @media screen and (max-width: 768px) {
+            header .logo {
+                font-size: 28px;
+            }
+
+            header nav a {
+                font-size: 14px;
+            }
+
+            .chat-list {
+                width: 40%;
+            }
+
+            .chat-box {
+                width: 60%;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            header {
+                padding: 10px 15px;
+            }
+
+            header .logo {
+                font-size: 24px;
+            }
+
+            header nav a {
+                font-size: 12px;
+            }
+
+            main {
+                flex-direction: column;
+            }
+
+            .chat-list {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid #C75B7A;
+            }
+
+            .chat-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Cloop</div>
+        <nav>
+            <img class="search-icon" src="images/icons8-search-30.png" alt="search">
+            <a href="#">Contact Us</a>
+            <img class="user-profile" src="images/user-profile-30.png" alt="profile">Berry</a>
+            <button class="trade-btn">Trade</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Chat List -->
+        <div class="chat-list">
+            <div class="chat-list-item" onclick="showChat('meekuom')">
+                <img src="images/user-1.jpg" alt="user">
+                <span>@meekuom</span>
+            </div>
+            <div class="chat-list-item" onclick="showChat('cloudspeaks')">
+                <img src="images/user2.png" alt="user">
+                <span>@cloudspeaks</span>
+            </div>
+        </div>
+
+        <!-- Chat Box -->
+        <div class="chat-box" id="chat-box">
+            <div class="chat-header">Select a chat</div>
+            <div class="chat-messages" id="chat-messages">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="message-input">
+                <input type="text" id="message-input" placeholder="Type a message">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentChat = '';
+
+        const chats = {
+            meekuom: [
+                { type: 'received', text: "I'm interested!" },
+                { type: 'sent', text: "Sure!" }
+            ],
+            cloudspeaks: [
+                { type: 'received', text: "Hey, can you help me?" },
+                { type: 'sent', text: "Of course!" }
+            ]
+        };
+
+        function showChat(user) {
+            currentChat = user;
+            const chatBox = document.getElementById('chat-box');
+            const chatMessages = document.getElementById('chat-messages');
+            chatBox.querySelector('.chat-header').textContent = `@${user}`;
+            chatMessages.innerHTML = '';
+
+            chats[user].forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.type}`;
+                messageDiv.textContent = message.text;
+                chatMessages.appendChild(messageDiv);
+            });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const messageText = input.value.trim();
+            if (messageText !== '' && currentChat) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message sent';
+                messageDiv.textContent = messageText;
+                document.getElementById('chat-messages').appendChild(messageDiv);
+                input.value = '';
+                chats[currentChat].push({ type: 'sent', text: messageText });
+            }
+        }
+    </script>
+</body>
+</html>

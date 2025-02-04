@@ -1,0 +1,136 @@
+$primary-color: #C75B7A;
+$secondary-color: #F6C6C6;
+$background-color: #FFE4E1;
+$text-color: #333;
+$hover-color: #FFFFFF;
+
+.chatpage {
+  display: flex;
+  flex: 1;
+  height: 90vh;
+
+  /* Chat List */
+  .chat-list {
+    width: 30%;
+    background-color: $secondary-color;
+    padding: 20px;
+    border-right: 2px solid $primary-color;
+    overflow-y: auto;
+
+    .chat-list-item {
+      padding: 15px;
+      background-color: $background-color;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s ease;
+
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      &:hover {
+        background-color: $primary-color;
+        color: $hover-color;
+      }
+    }
+  }
+
+  /* Chat Box */
+  .chat-box {
+    width: 70%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    .chat-header {
+      background-color: $primary-color;
+      color: $hover-color;
+      padding: 10px;
+      border-radius: 8px 8px 0 0;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .chat-messages {
+      background-color: $background-color;
+      padding: 10px;
+      flex: 1;
+      overflow-y: auto;
+      border-radius: 0 0 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 80vh;
+      scrollbar-width: thin;
+      scrollbar-color: $primary-color $background-color;
+
+      .message {
+        padding: 10px;
+        border-radius: 20px;
+        width: fit-content;
+        max-width: 70%;
+        word-wrap: break-word;
+        white-space: pre-wrap; // Preserve newlines
+
+        &.sent {
+          background-color: $primary-color;
+          color: $hover-color;
+          align-self: flex-end;
+        }
+
+        &.received {
+          background-color: $hover-color;
+          color: $text-color;
+          align-self: flex-start;
+        }
+      }
+
+      .no-messages {
+        text-align: center;
+        font-size: 16px;
+        color: $text-color;
+      }
+    }
+
+    .message-input {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      textarea {
+        flex: 1;
+        padding: 10px;
+        border-radius: 20px;
+        border: 1px solid $primary-color;
+        outline: none;
+        font-size: 16px;
+        resize: none;
+        font-family: "Inter";
+      }
+
+      button {
+        background-color: $primary-color;
+        color: $hover-color;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+      }
+    }
+  }
+}

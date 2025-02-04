@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <title>Cloop - Add New Item</title>
+    <style>
+        /* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #FFF0E3; 
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #C75B7A; /* Deep Pink Header */
+    color: #FFFFFF;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@font-face {
+    font-family: 'Joan';
+    src: url('fonts/Joan-Regular.ttf') format('truetype'); /* Ensure the path matches */
+}
+
+header .logo {
+    font-family: 'Joan', serif;
+    font-size: 36px;
+    font-weight: normal;
+    color: #FFFFFF;
+    text-transform: capitalize;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+header nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+header nav .search-icon{
+    width: 22px;
+    cursor: pointer;
+}
+
+header nav .user-profile{
+    width: 22px;
+    cursor: pointer;
+}
+
+header nav .trade-btn {
+    background-color: #F6C6C6;
+    border: none;
+    padding: 10px 20px;
+    color: #C75B7A;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+header nav .trade-btn:hover {
+    background-color: #C75B7A;
+}
+
+main {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: space-between; /* Align left and right corners */
+    align-items: center;
+    background-color: transparent; /* No background box */
+    padding: 0; /* Optional: Remove padding */
+    width: 100%;
+    margin-bottom: 20px; /* Add space below filter section */
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-button, .dropdown {
+    background-color: #F6C6C6;
+    color: #333;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter-button:hover, .dropdown:hover {
+    background-color: #F6C6C6;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    width: 120px;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #F6C6C6;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+select {
+    padding: 5px 10px;
+    background-color: #F6C6C6;
+    border: 1px solid #F6C6C6;
+    border-radius: 5px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+    gap: 15px; /* Space between items */
+    margin-top: 20px; /* Add space between filter section and product grid */
+}
+
+.grid-item {
+    background-color: #fde4e0; /* Light pink background */
+    border: 1px solid #f0c4c0;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none; /* Remove underline for links */
+    color: inherit; /* Inherit text color */
+}
+
+.grid-item:hover {
+    transform: translateY(-5px); /* Slight lift effect on hover */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.grid-item img {
+    max-width: 100%; /* Make sure the image fits within the box */
+    border-radius: 8px;
+    height: 150px; /* Fixed height for consistent layout */
+    object-fit: cover; /* Ensures images fill the area properly */
+}
+
+.grid-item p {
+    margin: 10px 0 0;
+    font-weight: bold;
+    color: #333;
+}
+
+.view-more-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.view-more-btn {
+    background-color: #e57f7f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.view-more-btn:hover {
+    background-color: #d56c6c;
+}
+
+/* Media Queries for Responsiveness */
+
+/* Tablet Screen */
+@media screen and (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller screens */
+    }
+
+    .filter-group {
+        flex-direction: column; /* Stack filter items vertically */
+        gap: 15px;
+    }
+
+    header .logo {
+        font-size: 28px; /* Smaller logo font size on smaller screens */
+    }
+
+    header nav a {
+        font-size: 14px; /* Smaller font size for nav items */
+    }
+
+    .view-more-btn {
+        font-size: 14px; /* Slightly smaller text for the button */
+        padding: 8px 16px;
+    }
+}
+
+/* Mobile Screen */
+@media screen and (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: 1fr; /* 1 column for mobile */
+    }
+
+    header {
+        padding: 10px 15px; /* Less padding for smaller screens */
+    }
+
+    header .logo {
+        font-size: 24px; /* Even smaller logo for mobile */
+    }
+
+    header nav a {
+        font-size: 12px; /* Small font size for mobile nav */
+    }
+
+    .filter-container {
+        flex-direction: column; /* Stack filter section vertically */
+        gap: 15px;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    select {
+        font-size: 12px; /* Smaller font size for select dropdown */
+    }
+
+    .view-more-btn {
+        font-size: 14px; /* Adjust the button size for small screens */
+        padding: 8px 16px;
+    }
+}
+header nav .signin-btn {
+            background-color: transparent;
+            border: none;
+            padding: 8px 16px;
+            color: #fff;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        header nav .signin-btn:hover {
+            background-color: #C75B7A;
+            color: #FFF;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            background-color: #C75B7A;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-content .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        #messageModal .modal-content {
+    background: #fff7f2; /* Light pink */
+    text-align: center;
+}
+
+#messageModal h2 {
+    color: #c75b7a; /* Deep pink */
+    margin-bottom: 10px;
+}
+
+#messageModal p {
+    color: #333;
+    font-size: 16px;
+}
+
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">Cloop</div>
+        <nav>
+            <img class="search-icon" src="images/icons8-search-30.png" alt="search">
+            <a href="#">Contact Us</a>
+            <button class="signin-btn" id="signInBtn">Sign In</button>
+            <button class="trade-btn">Trade</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Filter Container -->
+        <div class="filter-container">
+            <div class="filter-group">
+                <!-- Colour Dropdown -->
+                <select id="filter-colour">
+                    <option value="">Colour</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Green">Green</option>
+                </select>
+
+                <!-- Size Dropdown -->
+                <select id="filter-size">
+                    <option value="">Size</option>
+                    <option value="Small">Small</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Large">Large</option>
+                </select>
+
+                <!-- Style Dropdown -->
+                <select id="filter-style">
+                    <option value="">Style</option>
+                    <option value="Casual">Casual</option>
+                    <option value="Formal">Formal</option>
+                    <option value="Sporty">Sporty</option>
+                </select>
+
+                <!-- Clear Filters Button -->
+                <button id="clear-filters" class="filter-button">Clear Filters</button>
+            </div>
+
+            <div class="filter-group">
+                <!-- Sort & View Dropdown -->
+                <select id="sort-view">
+                    <option value="Best Match">Best Match</option>
+                    <option value="Low to High">Price: Low to High</option>
+                    <option value="High to Low">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Product Grid (Table) -->
+        <div class="grid-container" id="gridContainer">
+            <!-- Initial Items -->
+            <a href="product-uniqlo-maroon-dress.html" class="grid-item">
+                <img src="https://via.placeholder.com/150" alt="Uniqlo maroon dress">
+                <p>Uniqlo Maroon Dress</p>
+            </a>
+            <a href="product-blue-y2k-camisole.html" class="grid-item">
+                <img src="https://via.placeholder.com/150" alt="Blue Y2K Camisole">
+                <p>Blue Y2K Camisole</p>
+            </a>
+            <a href="product-black-chic-skirt.html" class="grid-item">
+                <img src="https://via.placeholder.com/150" alt="Black Chic Skirt">
+                <p>Black Chic Skirt</p>
+            </a>
+        </div>
+
+        <!-- View More Button -->
+        <div class="view-more-container">
+            <button class="view-more-btn" id="viewMoreBtn">View More</button>
+        </div>
+
+           <!-- Sign In Modal -->
+        <div class="modal" id="signInModal">
+            <div class="modal-content">
+                <span class="close" id="closeSignInModal">&times;</span>
+                <h2>Sign In</h2>
+                <form id="signInForm">
+                    <label for="signInUsername">Username:</label>
+                    <input type="text" id="signInUsername" name="username">
+                    <label for="signInPassword">Password:</label>
+                    <input type="password" id="signInPassword" name="password">
+                    <button type="submit">Sign In</button>
+                    <div class="error-message" id="signInErrorMessage"></div>
+                </form>
+                <button id="openSignUpModal" style="background-color: #F6C6C6; margin-top: 10px;">Sign Up</button>
+            </div>
+        </div>
+
+        <!-- Sign Up Modal -->
+        <div class="modal" id="signUpModal">
+            <div class="modal-content">
+                <span class="close" id="closeSignUpModal">&times;</span>
+                <h2>Sign Up</h2>
+                <form id="signUpForm">
+                    <label for="signUpUsername">Username:</label>
+                    <input type="text" id="signUpUsername" name="username">
+                    <label for="signUpEmail">Email:</label>
+                    <input type="email" id="signUpEmail" name="email">
+                    <label for="signUpPassword">Password:</label>
+                    <input type="password" id="signUpPassword" name="password">
+                    <button type="submit">Sign Up</button>
+                    <div class="error-message" id="signUpErrorMessage"></div>
+                </form>
+
+                <div class="modal" id="messageModal">
+                    <div class="modal-content">
+                        <span class="close" id="closeMessageModal">&times;</span>
+                        <h2 id="modalTitle">Default Title</h2>
+                        <p id="modalMessage">Default message content</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            // Get references to the dropdowns and button
+            const colourFilter = document.getElementById('filter-colour');
+            const sizeFilter = document.getElementById('filter-size');
+            const styleFilter = document.getElementById('filter-style');
+            const clearFiltersButton = document.getElementById('clear-filters');
+
+            // Add event listener to the "Clear Filters" button
+            clearFiltersButton.addEventListener('click', () => {
+                // Reset all filter dropdowns to their default values
+                colourFilter.value = '';
+                sizeFilter.value = '';
+                styleFilter.value = '';
+
+                // Optional: Log a message or update the UI to indicate filters were cleared
+                console.log('All filters have been cleared.');
+            });
+
+            // Add more products when the "View More" button is clicked
+            const gridContainer = document.getElementById('gridContainer');
+            const viewMoreBtn = document.getElementById('viewMoreBtn');
+
+            viewMoreBtn.addEventListener('click', () => {
+                // Additional items to be added
+                const newItems = [
+                    {
+                        href: 'product-yoga-pants.html',
+                        imgSrc: 'https://via.placeholder.com/150',
+                        alt: 'Yoga Pants',
+                        name: 'Yoga Pants'
+                    },
+                    {
+                        href: 'product-printed-star-shirt.html',
+                        imgSrc: 'https://via.placeholder.com/150',
+                        alt: 'Printed Star Shirt',
+                        name: 'Printed Star Shirt'
+                    },
+                    {
+                        href: 'product-red-brown-tank-top.html',
+                        imgSrc: 'https://via.placeholder.com/150',
+                        alt: 'Red and Brown Tank Top',
+                        name: 'Red and Brown Tank Top'
+                    }
+                ];
+
+                // Create and append new items
+                newItems.forEach(item => {
+                    const a = document.createElement('a');
+                    a.href = item.href;
+                    a.classList.add('grid-item');
+
+                    const img = document.createElement('img');
+                    img.src = item.imgSrc;
+                    img.alt = item.alt;
+
+                    const p = document.createElement('p');
+                    p.textContent = item.name;
+
+                    a.appendChild(img);
+                    a.appendChild(p);
+
+                    gridContainer.appendChild(a);
+                });
+
+                // Hide the "View More" button if no more products need to be loaded
+                viewMoreBtn.style.display = 'none';
+            });
+
+            // Sign In Modal Logic
+            const signInBtn = document.getElementById('signInBtn');
+            const signInModal = document.getElementById('signInModal');
+            const closeSignInModal = document.getElementById('closeSignInModal');
+            const signInForm = document.getElementById('signInForm');
+            const signInErrorMessage = document.getElementById('signInErrorMessage');
+
+            signInBtn.addEventListener('click', () => {
+                signInModal.style.display = 'flex';
+            });
+
+            closeSignInModal.addEventListener('click', () => {
+                signInModal.style.display = 'none';
+            });
+
+            signInForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = document.getElementById('signInUsername').value;
+                const password = document.getElementById('signInPassword').value;
+
+                if (username !== 'validUsername') {
+                    signInErrorMessage.textContent = 'Invalid Username';
+                    return;
+                }
+
+                if (password !== 'correctPassword') {
+                    signInErrorMessage.textContent = 'Incorrect Password';
+                    return;
+                }
+
+                signInErrorMessage.textContent = '';
+                alert('Sign in successful!');
+                signInModal.style.display = 'none';
+            });
+
+            // Sign Up Modal Logic
+            const signUpModal = document.getElementById('signUpModal');
+            const openSignUpModal = document.getElementById('openSignUpModal');
+            const closeSignUpModal = document.getElementById('closeSignUpModal');
+            const signUpForm = document.getElementById('signUpForm');
+            const signUpErrorMessage = document.getElementById('signUpErrorMessage');
+
+            openSignUpModal.addEventListener('click', () => {
+                signInModal.style.display = 'none';
+                signUpModal.style.display = 'flex';
+            });
+
+            closeSignUpModal.addEventListener('click', () => {
+                signUpModal.style.display = 'none';
+            });
+
+            signUpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = document.getElementById('signUpUsername').value;
+                const email = document.getElementById('signUpEmail').value;
+                const password = document.getElementById('signUpPassword').value;
+
+                if (username.length < 4 || username.length > 15) {
+                    signUpErrorMessage.textContent = 'Username must be between 4 and 15 characters long.';
+                    return;
+                }
+
+                const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+                if (!emailPattern.test(email)) {
+                    signUpErrorMessage.textContent = 'Email address must be valid.';
+                    return;
+                }
+
+                if (password.length < 7) {
+                    signUpErrorMessage.textContent = 'Password must be 7 or more characters.';
+                    return;
+                }
+
+                signUpErrorMessage.textContent = '';
+                alert('Sign up successful!');
+                signUpModal.style.display = 'none';
+            });
+
+            const messageModal = document.getElementById('messageModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const closeMessageModal = document.getElementById('closeMessageModal');
+
+            // Close the message modal
+            closeMessageModal.addEventListener('click', () => {
+                messageModal.style.display = 'none';
+            });
+
+            // Display the message modal with custom content
+            function displayMessage(title, message) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                messageModal.style.display = 'flex';
+            }
+
+            // Simulate successful sign-up
+            function onSignUpSuccess() {
+                displayMessage("You're good to go!", "Your account has been successfully created.");
+            }
+
+            // Simulate sign-in failure
+            function onSignInFail() {
+                displayMessage(
+                    "Unable to connect to your account",
+                    "We could not connect to your account due to a technical issue on our end."
+                );
+            }
+
+            // Example usage in the sign-in form
+            signInForm.addEventListener('submit', (e) => {
+                e.preventDefault(); // Prevent form submission
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                // Replace this with your validation logic
+                if (username !== 'validUsername' || password !== 'correctPassword') {
+                    onSignInFail(); // Show failure modal
+                } else {
+                    alert('Sign in successful!'); // Or redirect to another page
+                    signInModal.style.display = 'none';
+                }
+            });
+
+        </script>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+header {
+    background-color: #C75B7A;
+    color: #FFFFFF;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+        font-family: 'Joan', serif;
+        font-size: 36px;
+        font-weight: normal;
+        color: #FFFFFF;
+        text-transform: capitalize;
+
+        a {
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+    }
+
+    nav {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .search-icon, 
+        .user-profile {
+            width: 22px;
+            cursor: pointer;
+        }
+
+        .trade-btn {
+            background-color: #F6C6C6;
+            border: none;
+            padding: 10px 20px;
+            color: #C75B7A;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: #d14b72;
+                color: #FFFFFF;
+            }
+        }
+    }
+}
+
+main {
+    display: flex;
+    flex: 1;
+}

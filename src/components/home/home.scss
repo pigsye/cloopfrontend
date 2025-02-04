@@ -1,0 +1,108 @@
+$primary-color: #C75B7A;
+$secondary-color: #F6C6C6;
+$background-color: #FFF0E3;
+$text-color: #333;
+$border-radius: 10px;
+$hover-color: #B14A69;
+
+.homepage {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .filter-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+    gap: 15px;
+
+    .filter-group {
+      display: flex;
+      gap: 10px;
+
+      select,
+      .filter-button {
+        background-color: $secondary-color;
+        color: $text-color;
+        border: 1px solid transparent;
+        border-radius: $border-radius;
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: darken($secondary-color, 10%);
+        }
+      }
+    }
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+    width: 80%;
+
+    .grid-item {
+      background-color: lighten($secondary-color, 10%);
+      border: 1px solid darken($secondary-color, 10%);
+      border-radius: $border-radius;
+      text-align: center;
+      padding: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      color: inherit;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      img {
+        max-width: 100%;
+        border-radius: 8px;
+        height: 150px;
+        object-fit: cover;
+      }
+
+      p {
+        margin-top: 10px;
+        font-weight: bold;
+        color: $text-color;
+      }
+    }
+  }
+
+  .no-results {
+    font-size: 16px;
+    color: $primary-color;
+    margin-top: 20px;
+    font-weight: bold;
+  }
+
+  .view-more-container {
+    text-align: center;
+    margin-top: 20px;
+
+    .view-more-btn {
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: $border-radius;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+  }
+}

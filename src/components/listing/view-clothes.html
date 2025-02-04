@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Cloop - Heart Denim Skirt</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFF0E3; /* Reference background color */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #C75B7A; /* Reference header color */
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @font-face {
+            font-family: 'Joan';
+            src: url('fonts/Joan-Regular.ttf') format('truetype'); /* Ensure the path matches */
+        }
+
+        .header__logo {
+            font-family: 'Joan', serif;
+            font-size: 36px; /* Matching reference font size */
+            color: #FFFFFF;
+            text-transform: capitalize;
+        }
+
+        .header__nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header__nav a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .header__nav .header__search-icon {
+            width: 22px;
+            cursor: pointer;
+        }
+
+        .header__nav .header__trade-btn {
+            background-color: #F6C6C6;
+            border: none;
+            padding: 10px 20px;
+            color: #C75B7A;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .header__nav .header__trade-btn:hover {
+            background-color: #C75B7A;
+            color: #FFFFFF;
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main__product {
+            display: flex;
+            background-color: #FFF0E3;
+            border: 2px solid #E08AA8;
+            border-radius: 12px;
+            padding: 20px;
+            gap: 20px;
+            max-width: 900px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .main__product .product__image-container img {
+            max-width: 250px;
+            border-radius: 8px;
+            border: 2px solid #FFDBDB;
+        }
+
+        .main__product .product__details-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main__product .product__details-container .details__title-section h1 {
+            font-size: 24px;
+            color: #C75B7A;
+        }
+
+        .main__product .product__details-container .details__title-section .details__listing-info {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .main__product .product__details-container .details__info-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .main__product .product__details-container .details__info-section .info__item .info__label {
+            font-size: 14px;
+            color: #000;
+        }
+
+        .main__product .product__details-container .details__info-section .info__item .info__value {
+            font-size: 16px;
+            color: #C75B7A;
+        }
+
+        .main__product .product__details-container .details__description-section .description__label {
+            font-size: 14px;
+            color: #000;
+            margin-bottom: 5px;
+        }
+
+        .main__product .product__details-container .details__description-section .description__text {
+            font-size: 16px;
+            color: #C75B7A;
+        }
+
+        .main__product .product__details-container .details__request-btn {
+            align-self: flex-start;
+            background-color: #C75B7A;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .main__product .product__details-container .details__request-btn:hover {
+            background-color: #B14A69;
+        }
+
+        .bookmark_icon{
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+        }
+
+        .bookmark-container {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .bookmark-container input[type="checkbox"] {
+            display: none;
+        }
+
+        .bookmark-container label {
+            display: block;
+            width: 24px; 
+            height: 24px; 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 1;
+            transition: background-image 0.3s ease;
+            transition: opacity 0.6s ease;
+        }
+
+        .bookmark-container input[type="checkbox"] + label {
+            background-image: url('images/bookmark_icon.png'); 
+        }
+
+        .bookmark-container input[type="checkbox"]:checked + label {
+            background-image: url('images/bookmark_icon_clicked.png'); 
+        }
+
+        .bookmark-container label:hover {
+            opacity: 0.6; 
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Modal box */
+        .modal {
+            background: #ffefe6;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        /* Close button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            background: none;
+            border: none;
+            color: #d66;
+        }
+        .modal p {
+            color: #d66;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        /* Button to trigger popup */
+        .trigger-btn {
+            padding: 10px 20px;
+            background: #d66;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header__logo">Cloop</div>
+        <nav class="header__nav">
+            <img class="header__search-icon" src="images/icons8-search-30.png" alt="search">
+            <a href="#">Contact Us</a>
+            <a href="#">Register | Login</a>
+            <button class="header__trade-btn">Trade</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="main__product">
+            <div class="product__image-container">
+                <img src="images/fivehead.jpg" alt="head">
+            </div>
+            <div class="product__details-container">
+                <div class="details__title-section">
+                    <h1>Fivehead</h1>
+                    <p class="details__listing-info">Listing by <strong>@niceguy32</strong></p>
+                </div>
+                <div class="details__info-section">
+                    <div class="info__item">
+                        <p class="info__label">Category</p>
+                        <p class="info__value">Tops</p>
+                    </div>
+                    <div class="info__item">
+                        <p class="info__label">Condition</p>
+                        <p class="info__value">Like new</p>
+                    </div>
+                    <div class="info__item">
+                        <p class="info__label">Size</p>
+                        <p class="info__value">Extra Large</p>
+                    </div>
+                </div>
+                <div class="details__description-section">
+                    <p class="description__label">Description</p>
+                    <p class="description__text">Take it.</p>
+                </div>
+                <div class="reqest_bookmark_container">
+                    <button class="details__request-btn" onclick="openModal('Your request for <br><strong>Fivehead</strong><br> has been sent to <br><strong>@niceguy32</strong>.')">Request</button>
+                    <div class="bookmark-container">
+                        <input type="checkbox" id="bookmark-toggle" />
+                        <label for="bookmark-toggle"></label>
+                    </div>
+                </div>
+
+                <div class="modal-overlay" id="modalOverlay">
+                    <div class="modal">
+                        <button class="close-btn" onclick="closeModal()">✖</button>
+                        <p id="modalText"></p>
+                    </div>
+                </div>
+                
+                <script>
+                    function openModal(message) {
+                        document.getElementById("modalText").innerHTML = message;
+                        document.getElementById("modalOverlay").style.display = "flex";
+                    }
+            
+                    function closeModal() {
+                        document.getElementById("modalOverlay").style.display = "none";
+                    }
+                </script>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
