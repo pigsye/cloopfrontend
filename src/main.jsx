@@ -19,6 +19,7 @@ import FashionTrends from './components/static/fashiontrendsandinspiration.jsx';
 import CommunityEvents from './components/static/communityandevents.jsx';
 import TradeEtiquette from './components/static/tradeeqqiute.jsx';
 import TermsOfService from './components/static/tos.jsx';
+import LoginSystem  from './components/loginsystem/loginsystem.jsx';
 import "./components/main.scss";
 
 createRoot(document.getElementById('root')).render(
@@ -41,6 +42,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/community-events" element={<CommunityEvents />} />
           <Route path="/trade-etiquette" element={<TradeEtiquette />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/login" element={<LoginSystem />} />
         </Routes>
       </div>
       <Footer />
