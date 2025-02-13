@@ -1,75 +1,103 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import API, { BASE_URL } from "../../api"; // Import API & BASE_URL
 import "./Profile.scss";
 
 export default function Profile() {
-  // User data (this will later be fetched from an API)
   const [userData, setUserData] = useState({
-    name: "John Doe",
-    email: "johndoe@example.com",
-    phone: "91234567", // Phone number without +65
-    bio: "This is a sample bio. User can update their bio here.",
-    profilePicture: "https://via.placeholder.com/150", // Default profile picture
+    username: "",
+    email: "",
+    phone: "",
+    bio: "",
+    pfp: "",
   });
 
-  // State to track the edit mode
   const [isEditing, setIsEditing] = useState(false);
-
-  // State to track validation errors
   const [errors, setErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(true);
+  const [updateMessage, setUpdateMessage] = useState("");
 
-  // Handle form changes
+  useEffect(() => {
+    async function fetchUserProfile() {
+      try {
+        const response = await API.get("/profile/1"); // Assume user ID 1
+        const profileData = response.data.profile;
+
+        // Construct full profile picture URL
+        if (profileData.pfp) {
+          profileData.pfp = `${BASE_URL}${profileData.pfp}`;
+        }
+
+        setUserData(profileData);
+      } catch (err) {
+        console.error("Failed to load user profile:", err);
+      }
+    }
+
+    fetchUserProfile();
+  }, []);
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
+    setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
-  // Handle profile picture change (simulate file upload for now)
-  const handleProfilePictureChange = () => {
-    // Simulate profile picture change by setting a new image URL
-    const newProfilePicture = prompt("Enter new profile picture URL:");
-    if (newProfilePicture) {
-      setUserData({ ...userData, profilePicture: newProfilePicture });
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await API.post("/profile/1/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        setUserData((prev) => ({
+          ...prev,
+          pfp: `${BASE_URL}${response.data.filename}`,
+        }));
+        setUpdateMessage("Profile picture updated successfully!");
+      } else {
+        setUpdateMessage("Failed to update profile picture.");
+      }
+    } catch (err) {
+      console.error("Failed to upload profile picture:", err);
+      setUpdateMessage("Error uploading profile picture.");
     }
   };
 
-  // Phone number validation (Starts with 8 or 9 followed by 7 more digits)
-  const validatePhoneNumber = (phone) => {
-    const regex = /^[89]\d{7}$/;  // Regex to match Singapore phone number starting with 8 or 9, followed by 7 digits
-    return regex.test(phone);
-  };
-
-  // Email validation (basic email format)
-  const validateEmail = (email) => {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;  // Basic email format validation
-    return regex.test(email);
-  };
-
-  // Toggle edit mode
-  const toggleEditMode = () => {
-    setIsEditing(!isEditing);
-  };
-
-  // Handle form validation and save changes
-  const handleSaveChanges = (e) => {
+  const handleSaveChanges = async (e) => {
     e.preventDefault();
 
     let validationErrors = {};
-
-    // Validate fields
-    if (!userData.name.trim()) validationErrors.name = "Name is required.";
-    if (!validateEmail(userData.email)) validationErrors.email = "Please enter a valid email (e.g. text@text.text).";
-    if (!validatePhoneNumber(userData.phone)) validationErrors.phone = "Phone number must start with 8 or 9 and be 8 digits long.";
+    if (!userData.username.trim()) validationErrors.username = "Name is required.";
+    if (!/^[89]\d{7}$/.test(userData.phone)) validationErrors.phone = "Phone number must start with 8 or 9 and be 8 digits long.";
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userData.email)) validationErrors.email = "Invalid email format.";
     if (!userData.bio.trim()) validationErrors.bio = "Bio is required.";
 
-    // Set errors and validation state
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      setIsFormValid(false);
-    } else {
-      setErrors({});
-      setIsFormValid(true);
-      setIsEditing(false);  // Exit edit mode after successful validation
+      return;
+    }
+
+    try {
+      const response = await API.post("/profile/1", {
+        username: userData.username,
+        email: userData.email,
+        phone: userData.phone,
+        bio: userData.bio,
+      });
+
+      if (response.status === 200) {
+        setUpdateMessage("Profile updated successfully!");
+      } else {
+        setUpdateMessage("Failed to update profile.");
+      }
+
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update profile:", err);
+      setUpdateMessage("Error updating profile.");
     }
   };
 
@@ -78,68 +106,40 @@ export default function Profile() {
       <section className="profile-info">
         <h1>{isEditing ? "Edit Profile" : "Profile"}</h1>
 
-        {/* Profile Picture Section */}
         <div className="profile-picture-section">
           <img
-            src={userData.profilePicture}
+            src={userData.pfp || "https://via.placeholder.com/150"}
             alt="Profile"
             className="profile-picture"
           />
-          <button
-            className="change-profile-picture-btn"
-            onClick={handleProfilePictureChange}
-          >
-            Change Profile Picture
-          </button>
+          <input type="file" id="upload-pfp" accept="image/*" onChange={handleFileChange} />
+          <label htmlFor="upload-pfp" className="upload-btn-label">Upload New Picture</label>
         </div>
 
-        {/* Form fields */}
         <div className="profile-field">
           <label>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={userData.name}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-          {errors.name && <span className="error">{errors.name}</span>}
+          <input type="text" name="username" value={userData.username} onChange={handleChange} disabled={!isEditing} />
+          {errors.username && <span className="error">{errors.username}</span>}
         </div>
         <div className="profile-field">
           <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={userData.email}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
+          <input type="email" name="email" value={userData.email} onChange={handleChange} disabled={!isEditing} />
           {errors.email && <span className="error">{errors.email}</span>}
         </div>
         <div className="profile-field">
           <label>Phone</label>
-          <input
-            type="text"
-            name="phone"
-            value={userData.phone}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
+          <input type="text" name="phone" value={userData.phone} onChange={handleChange} disabled={!isEditing} />
           {errors.phone && <span className="error">{errors.phone}</span>}
         </div>
         <div className="profile-field">
           <label>Bio</label>
-          <textarea
-            name="bio"
-            value={userData.bio}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
+          <textarea name="bio" value={userData.bio} onChange={handleChange} disabled={!isEditing} />
           {errors.bio && <span className="error">{errors.bio}</span>}
         </div>
 
-        {/* Button to toggle between view and edit modes */}
-        <button className="edit-btn" onClick={isEditing ? handleSaveChanges : toggleEditMode}>
+        {updateMessage && <p className="update-message">{updateMessage}</p>}
+
+        <button className="edit-btn" onClick={isEditing ? handleSaveChanges : () => setIsEditing(true)}>
           {isEditing ? "Save Changes" : "Edit Profile"}
         </button>
       </section>

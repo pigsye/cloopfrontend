@@ -1,25 +1,21 @@
 import React, { useState, useEffect } from "react";
+import API, { BASE_URL } from "../../api";
 import "./additem.scss";
 
 export default function AddItem() {
-  // Simulated API fetch for tag options
   const [availableTags, setAvailableTags] = useState([]);
 
   useEffect(() => {
-    // Simulate API response
-    setTimeout(() => {
-      setAvailableTags([
-        { id: 1, name: "Clothing", group: "Category" },
-        { id: 2, name: "Accessories", group: "Category" },
-        { id: 3, name: "Brand New", group: "Condition" },
-        { id: 4, name: "Like New", group: "Condition" },
-        { id: 5, name: "Used", group: "Condition" },
-        { id: 6, name: "Small", group: "Size" },
-        { id: 7, name: "Medium", group: "Size" },
-        { id: 8, name: "Large", group: "Size" },
-        { id: 9, name: "Extra Large", group: "Size" },
-      ]);
-    }, 1000);
+    async function fetchTags() {
+      try {
+        const response = await API.get("/tags"); // Fetch available tags from API
+        setAvailableTags(response.data.tags);
+      } catch (err) {
+        console.error("Failed to fetch tags:", err);
+      }
+    }
+
+    fetchTags();
   }, []);
 
   const [formData, setFormData] = useState({
@@ -33,8 +29,22 @@ export default function AddItem() {
 
   const handleTagSelection = (tag) => {
     setFormData((prev) => {
-      const newTags = prev.selectedTags.filter((t) => t.group !== tag.group);
-      return { ...prev, selectedTags: [...newTags, tag] };
+      // Check if the tag is already selected
+      const isAlreadySelected = prev.selectedTags.some((t) => t.id === tag.id);
+  
+      if (isAlreadySelected) {
+        // If already selected, remove it
+        return {
+          ...prev,
+          selectedTags: prev.selectedTags.filter((t) => t.id !== tag.id),
+        };
+      } else {
+        // Otherwise, add it
+        return {
+          ...prev,
+          selectedTags: [...prev.selectedTags, tag],
+        };
+      }
     });
   };
 
@@ -60,11 +70,33 @@ export default function AddItem() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log("Form submitted:", formData);
-      alert("Item added successfully!");
+    if (!validateForm()) return;
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("selectedTags", formData.selectedTags.map(tag => tag.name).join(",")); // Convert array to comma-separated string
+
+    formData.photos.forEach((photo) => {
+      formDataToSend.append("photos", photo);
+    });
+
+    try {
+      const response = await API.post("/submit", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        alert("Item added successfully!");
+        setFormData({ title: "", description: "", photos: [], selectedTags: [] }); // Reset form
+      } else {
+        alert("Failed to add item.");
+      }
+    } catch (err) {
+      console.error("Failed to submit item:", err);
+      alert("Error submitting item.");
     }
   };
 

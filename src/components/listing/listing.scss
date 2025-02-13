@@ -10,7 +10,7 @@ $border-radius: 12px;
   display: flex;
   justify-content: center;
 
-  .product {
+  .product-details {
     display: flex;
     background-color: $background-color;
     border: 2px solid $primary-color;
@@ -19,8 +19,10 @@ $border-radius: 12px;
     gap: 20px;
     max-width: 900px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    min-width: 50%;
+    min-height: 50%;
 
-    .product__image-container {
+    .image-container {
       img {
         max-width: 250px;
         border-radius: 8px;
@@ -28,106 +30,92 @@ $border-radius: 12px;
       }
     }
 
-    .product__details-container {
+    .info-container {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 15px;
 
-      .details__title-section {
-        h1 {
-          font-size: 24px;
+      h1 {
+        font-size: 24px;
+        color: $primary-color;
+      }
+
+      .listing-by {
+        font-size: 14px;
+        color: #888;
+
+        a {
+          text-decoration: none;
+          font-weight: bold;
           color: $primary-color;
-        }
-
-        .details__listing-info {
-          font-size: 14px;
-          color: #888;
-        }
-      }
-
-      .details__info-section {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-
-        .info__item {
-          .info__label {
-            font-size: 14px;
-            color: #000;
-          }
-
-          .info__value {
-            font-size: 16px;
-            color: $primary-color;
-          }
-        }
-      }
-
-      .details__description-section {
-        .description__label {
-          font-size: 14px;
-          color: #000;
-          margin-bottom: 5px;
-        }
-
-        .description__text {
-          font-size: 16px;
-          color: $primary-color;
-        }
-      }
-
-      .reqest_bookmark_container {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        .details__request-btn {
-          background-color: $primary-color;
-          color: white;
-          border: none;
-          padding: 10px 20px;
-          font-size: 16px;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: 0.3s;
+          transition: color 0.3s ease;
 
           &:hover {
-            background-color: $hover-color;
+            color: $hover-color;
           }
         }
+      }
 
-        .bookmark-container {
-          display: inline-block;
-          cursor: pointer;
+      // Tags Section
+      .product-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
 
-          input[type="checkbox"] {
-            display: none;
-          }
-
-          label {
-            display: block;
-            width: 24px;
-            height: 24px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 1;
-            transition: opacity 0.6s ease;
-          }
-
-          input[type="checkbox"] + label {
-            background-image: url("images/bookmark_icon.png");
-          }
-
-          input[type="checkbox"]:checked + label {
-            background-image: url("images/bookmark_icon_clicked.png");
-          }
-
-          label:hover {
-            opacity: 0.6;
-          }
+        .tag {
+          background-color: $primary-color;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: bold;
         }
+      }
+
+      // Wishlist Button
+      .wishlist-btn {
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: $hover-color;
+        }
+      }
+
+      // Wishlist Status Message
+      .wishlist-message {
+        font-size: 14px;
+        color: green;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .wishlist-btn {
+    background-color: #C75B7A;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: #B14A69;
+    }
+  
+    &.active {
+      background-color: #999; // Grey color when wishlisted
+      &:hover {
+        background-color: #777; // Darker grey on hover
       }
     }
   }

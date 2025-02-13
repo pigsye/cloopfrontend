@@ -13,7 +13,8 @@ $hover-color: #B14A69;
 
   .filter-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     margin-bottom: 20px;
     gap: 15px;
@@ -22,8 +23,7 @@ $hover-color: #B14A69;
       display: flex;
       gap: 10px;
 
-      select,
-      .filter-button {
+      select {
         background-color: $secondary-color;
         color: $text-color;
         border: 1px solid transparent;
@@ -38,15 +38,75 @@ $hover-color: #B14A69;
         }
       }
     }
+
+    // Selected Filter Bubbles
+    .selected-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+
+      .filter-bubble {
+        background-color: $primary-color;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+        font-weight: bold;
+
+        button {
+          background: none;
+          border: none;
+          color: white;
+          cursor: pointer;
+          font-weight: bold;
+          padding: 0 5px;
+          font-size: 16px;
+
+          &:hover {
+            color: $hover-color;
+          }
+        }
+      }
+    }
+
+    // Styled Clear Filters Button
+    .filter-button {
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: $border-radius;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
   }
 
   .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr); // Default: 3 items per row
     gap: 15px;
     margin-top: 20px;
     width: 80%;
-
+  
+    @media (max-width: 768px) { // Medium screen (md)
+      grid-template-columns: repeat(2, 1fr); // 2 items per row
+    }
+  
+    @media (max-width: 576px) { // Small screen (sm)
+      grid-template-columns: repeat(1, 1fr); // 1 item per row
+    }
+  
     .grid-item {
       background-color: lighten($secondary-color, 10%);
       border: 1px solid darken($secondary-color, 10%);
@@ -57,19 +117,19 @@ $hover-color: #B14A69;
       transition: transform 0.2s, box-shadow 0.2s;
       text-decoration: none;
       color: inherit;
-
+  
       &:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
       }
-
+  
       img {
         max-width: 100%;
         border-radius: 8px;
         height: 150px;
         object-fit: cover;
       }
-
+  
       p {
         margin-top: 10px;
         font-weight: bold;

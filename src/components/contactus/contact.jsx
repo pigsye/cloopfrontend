@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import API from "../../api";
 import "./contact.scss";
 
 export default function ContactUs() {
+  const navigate = useNavigate(); // Initialize navigation
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,10 +16,9 @@ export default function ContactUs() {
   const [errors, setErrors] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [isValid, setIsValid] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false); // Tracks if submit button was clicked
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // More strict email validation
 
   // Handle input changes
   const handleChange = (e) => {
@@ -28,26 +31,39 @@ export default function ContactUs() {
   };
 
   // Validate form when submitted
-  useEffect(() => {
-    if (formSubmitted) {
-      const newErrors = {};
-      if (!formData.name.trim()) newErrors.name = "This field is required";
-      if (!emailPattern.test(formData.email)) newErrors.email = "Invalid email format";
-      if (!formData.messageType) newErrors.messageType = "Please select a message type";
-      if (!formData.message.trim()) newErrors.message = "This field is required";
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = "This field is required";
+    if (!emailPattern.test(formData.email)) newErrors.email = "Invalid email format";
+    if (!formData.messageType) newErrors.messageType = "Please select a message type";
+    if (!formData.message.trim()) newErrors.message = "This field is required";
 
-      setErrors(newErrors);
-      setIsValid(Object.keys(newErrors).length === 0);
-    }
-  }, [formData, formSubmitted]);
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitted(true); // Activate validation
-    if (isValid) {
-      setModalMessage("Your form has been submitted! Our team will get back to you shortly.");
-      setModalOpen(true);
+    setFormSubmitted(true);
+
+    if (validateForm()) {
+      try {
+        await API.post("/feedback", {
+          message: formData.message,
+        });
+
+        setModalMessage("Your form has been submitted! Redirecting to homepage...");
+        setModalOpen(true);
+
+        setTimeout(() => {
+          setModalOpen(false);
+          navigate("/"); // Redirect user to homepage
+        }, 3000);
+      } catch (err) {
+        setModalMessage("Failed to submit feedback. Please try again.");
+        setModalOpen(true);
+      }
     }
   };
 
@@ -97,7 +113,6 @@ export default function ContactUs() {
       {modalOpen && (
         <div className="modal-overlay">
           <div className="modal">
-            <button className="close-btn" onClick={() => setModalOpen(false)}>✖</button>
             <p>{modalMessage}</p>
           </div>
         </div>

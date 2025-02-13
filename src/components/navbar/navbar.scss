@@ -5,57 +5,96 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    position: relative;
+  
     .logo {
-        font-family: 'Joan', serif;
-        font-size: 36px;
-        font-weight: normal;
+      font-family: 'Joan', serif;
+      font-size: 36px;
+      font-weight: normal;
+      color: #FFFFFF;
+      text-transform: capitalize;
+  
+      a {
         color: #FFFFFF;
-        text-transform: capitalize;
-
-        a {
-            color: #FFFFFF;
-            text-decoration: none;
-        }
+        text-decoration: none;
+      }
     }
-
+  
+    /* Hamburger Menu Button (Hidden on Desktop) */
+    .hamburger-menu {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: white;
+      cursor: pointer;
+    }
+  
     nav {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-
-        a {
-            color: #FFFFFF;
-            text-decoration: none;
-            font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+  
+      a {
+        color: #FFFFFF;
+        text-decoration: none;
+        font-size: 16px;
+      }
+  
+      .trade-btn {
+        background-color: #F6C6C6;
+        border: none;
+        padding: 10px 20px;
+        color: #C75B7A;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background-color: #d14b72;
+          color: #FFFFFF;
         }
-
-        .search-icon, 
-        .user-profile {
-            width: 22px;
-            cursor: pointer;
-        }
-
-        .trade-btn {
-            background-color: #F6C6C6;
-            border: none;
-            padding: 10px 20px;
-            color: #C75B7A;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-
-            &:hover {
-                background-color: #d14b72;
-                color: #FFFFFF;
-            }
-        }
+      }
     }
-}
-
-main {
-    display: flex;
-    flex: 1;
-}
+  
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) { // Bootstrap 'md' size
+      .hamburger-menu {
+        display: block;
+      }
+  
+      nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: #C75B7A;
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+        border-top: 2px solid #F6C6C6;
+        margin: 0px;
+        gap: 0px !important;
+        z-index: 500;
+  
+        a {
+          display: block;
+          padding: 10px;
+          font-size: 18px;
+          margin: 0px !important;
+        }
+        
+        .trade-btn {
+          width: 100%;
+        }
+      }
+  
+      /* Show menu when open */
+      nav.open {
+        display: flex;
+      }
+    }
+  }

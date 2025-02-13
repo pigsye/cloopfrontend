@@ -1,31 +1,66 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import API, { BASE_URL } from "../../api"; // Import API and BASE_URL
 import "./userProfile.scss";
 
 export default function UserProfile() {
-  // Simulated data for the user profile (replace with API call in the future)
-  const [userData] = useState({
-    name: "Jane Smith",
-    email: "janesmith@example.com",
-    phone: "+65 98765432",
-    bio: "Hello! I'm Jane, a product designer from Singapore. Let's chat!",
-    profilePicture: "https://via.placeholder.com/150", // Default profile picture
-  });
+  const { id } = useParams(); // Get user ID from URL
+  const navigate = useNavigate(); // Hook to redirect user
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Simulate starting a chat (later this can trigger a real chat functionality)
-  const startChat = () => {
-    alert(`Starting chat with ${userData.name}...`);
+  useEffect(() => {
+    async function fetchUserProfile() {
+      try {
+        const response = await API.get(`/user/${id}`);
+        const profileData = response.data.profile;
+
+        // Construct full profile picture URL if a filename exists
+        if (profileData.pfp) {
+          profileData.pfp = `${BASE_URL}/uploads/${profileData.pfp}`;
+        }
+
+        setUserData(profileData);
+      } catch (err) {
+        setError("Failed to load user profile.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchUserProfile();
+  }, [id]);
+
+  const startChat = async () => {
+    try {
+      const response = await API.post(`/start-chat/${id}`);
+
+      if (response.status === 201 || response.status === 200) {
+        const chatId = response.data.chat_id;
+        navigate(`/chat?chat_id=${chatId}`); // Redirect to chat page with chat ID
+      } else {
+        alert("Failed to start chat.");
+      }
+    } catch (err) {
+      console.error("Error starting chat:", err);
+      alert("An error occurred.");
+    }
   };
+
+  if (loading) return <p>Loading profile...</p>;
+  if (error) return <p className="error">{error}</p>;
+  if (!userData) return <p className="error">User not found.</p>;
 
   return (
     <main className="user-profile-page">
       <section className="profile-info">
-        <h1>{userData.name}'s Profile</h1>
+        <h1>{userData.username}'s Profile</h1>
 
         {/* Profile Picture Section */}
         <div className="profile-picture-section">
           <img
-            src={userData.profilePicture}
+            src={userData.pfp || "https://via.placeholder.com/150"}
             alt="Profile"
             className="profile-picture"
           />
@@ -34,7 +69,7 @@ export default function UserProfile() {
         {/* Profile Information */}
         <div className="profile-field">
           <label>Name</label>
-          <p>{userData.name}</p>
+          <p>{userData.username}</p>
         </div>
         <div className="profile-field">
           <label>Email</label>
@@ -42,11 +77,11 @@ export default function UserProfile() {
         </div>
         <div className="profile-field">
           <label>Phone</label>
-          <p>{userData.phone}</p>
+          <p>{userData.phone || "No phone number provided"}</p>
         </div>
         <div className="profile-field">
           <label>Bio</label>
-          <p>{userData.bio}</p>
+          <p>{userData.bio || "No bio available"}</p>
         </div>
 
         {/* Button to start chat */}
