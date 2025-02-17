@@ -58,8 +58,9 @@ export default function Home() {
   };
 
   // Filter products based on selected tags (logical OR filtering)
-  const filteredProducts = products.filter((product) =>
-    selectedTags.length === 0 || selectedTags.some((tag) => product.tags.includes(tag))
+  const filteredProducts = products.filter(
+    (product) => product.is_listed !== false &&  // ✅ Ensure it's listed
+    (selectedTags.length === 0 || selectedTags.some((tag) => product.tags.includes(tag)))
   );
 
   // Handle "View More" button click

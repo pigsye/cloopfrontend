@@ -89,6 +89,21 @@ $border-radius: 12px;
         }
       }
 
+      .swap-btn {
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: $hover-color;
+        }
+      }
+
       // Wishlist Status Message
       .wishlist-message {
         font-size: 14px;
@@ -117,6 +132,63 @@ $border-radius: 12px;
       &:hover {
         background-color: #777; // Darker grey on hover
       }
+    }
+  }
+
+  .listing-btn {
+    background-color: #C75B7A; // Primary color
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    
+    &:hover {
+      background-color: darken(#C75B7A, 10%); // Slightly darker on hover
+      transform: scale(1.05);
+    }
+  
+    &.delist {
+      background-color: #D9534F; // Red for "De-list" action
+      &:hover {
+        background-color: darken(#D9534F, 10%);
+      }
+    }
+  
+    &.relist {
+      background-color: #5CB85C; // Green for "Re-list" action
+      &:hover {
+        background-color: darken(#5CB85C, 10%);
+      }
+    }
+  }
+
+  .cart-btn {
+    background-color: #F6C6C6; // Soft secondary color
+    color: #333; // Dark text for readability
+    border: 2px solid #C75B7A; // Primary accent border
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  
+    &:hover {
+      background-color: lighten(#C75B7A, 30%); // Lighter hover effect
+      border-color: darken(#C75B7A, 10%);
+      transform: scale(1.05);
+    }
+  
+    &:active {
+      transform: scale(0.95);
     }
   }
 }

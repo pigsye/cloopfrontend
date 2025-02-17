@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from "react";
-import API, { BASE_URL } from "../../api";
+import { useNavigate } from "react-router-dom";
+import API from "../../api";
+import { isAuthenticated } from "../../auth";
 import "./additem.scss";
 
 export default function AddItem() {
-  const [availableTags, setAvailableTags] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchTags() {
-      try {
-        const response = await API.get("/tags"); // Fetch available tags from API
-        setAvailableTags(response.data.tags);
-      } catch (err) {
-        console.error("Failed to fetch tags:", err);
-      }
+    if (!isAuthenticated()) {
+      navigate("/login");
     }
-
-    fetchTags();
   }, []);
 
+  const [availableTags, setAvailableTags] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -27,24 +23,24 @@ export default function AddItem() {
 
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    async function fetchTags() {
+      try {
+        const response = await API.get("/tags");
+        setAvailableTags(response.data.tags);
+      } catch (err) {
+        console.error("Failed to fetch tags:", err);
+      }
+    }
+    fetchTags();
+  }, []);
+
   const handleTagSelection = (tag) => {
     setFormData((prev) => {
-      // Check if the tag is already selected
       const isAlreadySelected = prev.selectedTags.some((t) => t.id === tag.id);
-  
-      if (isAlreadySelected) {
-        // If already selected, remove it
-        return {
-          ...prev,
-          selectedTags: prev.selectedTags.filter((t) => t.id !== tag.id),
-        };
-      } else {
-        // Otherwise, add it
-        return {
-          ...prev,
-          selectedTags: [...prev.selectedTags, tag],
-        };
-      }
+      return isAlreadySelected
+        ? { ...prev, selectedTags: prev.selectedTags.filter((t) => t.id !== tag.id) }
+        : { ...prev, selectedTags: [...prev.selectedTags, tag] };
     });
   };
 
@@ -65,7 +61,6 @@ export default function AddItem() {
     if (!formData.title || formData.title.length < 3) newErrors.title = "Title must be at least 3 characters.";
     if (formData.selectedTags.length === 0) newErrors.tags = "At least one tag is required.";
     if (formData.photos.length === 0) newErrors.photos = "At least one photo is required.";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -77,7 +72,7 @@ export default function AddItem() {
     const formDataToSend = new FormData();
     formDataToSend.append("title", formData.title);
     formDataToSend.append("description", formData.description);
-    formDataToSend.append("selectedTags", formData.selectedTags.map(tag => tag.name).join(",")); // Convert array to comma-separated string
+    formDataToSend.append("selectedTags", formData.selectedTags.map(tag => tag.name).join(","));
 
     formData.photos.forEach((photo) => {
       formDataToSend.append("photos", photo);
@@ -90,7 +85,7 @@ export default function AddItem() {
 
       if (response.status === 200) {
         alert("Item added successfully!");
-        setFormData({ title: "", description: "", photos: [], selectedTags: [] }); // Reset form
+        setFormData({ title: "", description: "", photos: [], selectedTags: [] });
       } else {
         alert("Failed to add item.");
       }

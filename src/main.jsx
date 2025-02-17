@@ -19,31 +19,39 @@ import FashionTrends from './components/static/fashiontrendsandinspiration.jsx';
 import CommunityEvents from './components/static/communityandevents.jsx';
 import TradeEtiquette from './components/static/tradeeqqiute.jsx';
 import TermsOfService from './components/static/tos.jsx';
+import Login from './components/login/login.jsx';
+import CreateAccount from './components/createAccount/createAccount.jsx';
+import { AuthProvider } from './components/authcontext.jsx';
+
 import "./components/main.scss";
 
 createRoot(document.getElementById('root')).render(
-  <Router>
-      <Navbar />
-      <div className="app__content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/add-item" element={<AddItem />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/userprofile/:id" element={<UserProfile />} />
-          <Route path="/products/:id" element={<Listing />} />
-          <Route path="/how-it-works" element={<HowItWorks />} />
-          <Route path="/style-match-guide" element={<StyleMatchGuide />} />
-          <Route path="/sustainability-impact" element={<SustainabilityImpact />} />
-          <Route path="/user-success-stories" element={<UserSuccessStories />} />
-          <Route path="/fashion-trends" element={<FashionTrends />} />
-          <Route path="/community-events" element={<CommunityEvents />} />
-          <Route path="/trade-etiquette" element={<TradeEtiquette />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-        </Routes>
-      </div>
-      <Footer />
-    </Router>
+  <AuthProvider>
+    <Router>
+        <Navbar />
+        <div className="app__content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/add-item" element={<AddItem />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/userprofile/:id" element={<UserProfile />} />
+            <Route path="/products/:id" element={<Listing />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
+            <Route path="/style-match-guide" element={<StyleMatchGuide />} />
+            <Route path="/sustainability-impact" element={<SustainabilityImpact />} />
+            <Route path="/user-success-stories" element={<UserSuccessStories />} />
+            <Route path="/fashion-trends" element={<FashionTrends />} />
+            <Route path="/community-events" element={<CommunityEvents />} />
+            <Route path="/trade-etiquette" element={<TradeEtiquette />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/create-account" element={<CreateAccount />} />
+          </Routes>
+        </div>
+        <Footer />
+      </Router>
+    </AuthProvider>
 
 )

@@ -1,0 +1,116 @@
+$primary-color: #C75B7A;
+$secondary-color: #F6C6C6;
+$background-color: #FFE4E1;
+$text-color: #333;
+$hover-color: #FFFFFF;
+$border-radius: 12px;
+
+.cart-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  background-color: $background-color;
+
+  .cart-container {
+    background-color: $secondary-color;
+    padding: 20px;
+    border-radius: $border-radius;
+    width: 60%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    h1 {
+      color: $primary-color;
+      margin-bottom: 15px;
+    }
+
+    .cart-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      .cart-item {
+        display: flex;
+        align-items: center;
+        background-color: $background-color;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: $border-radius;
+
+        .cart-item-img {
+          width: 60px;
+          height: 60px;
+          border-radius: $border-radius;
+          margin-right: 10px;
+        }
+
+        .cart-item-info {
+          flex: 1;
+          text-align: left;
+
+          h2 {
+            margin: 0;
+            font-size: 18px;
+            color: $text-color;
+          }
+
+          .remove-btn {
+            background-color: $primary-color;
+            color: $hover-color;
+            border: none;
+            padding: 5px 10px;
+            border-radius: $border-radius;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+              background-color: lighten($primary-color, 10%);
+            }
+          }
+        }
+      }
+    }
+
+    .checkout-btn {
+      background-color: $primary-color;
+      color: $hover-color;
+      border: none;
+      padding: 10px 20px;
+      border-radius: $border-radius;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+
+      &:hover {
+        background-color: lighten($primary-color, 10%);
+      }
+    }
+
+    .checkout-message {
+      margin-top: 10px;
+      color: $text-color;
+      font-size: 16px;
+    }
+
+    .continue-shopping {
+      display: inline-block;
+      margin-top: 15px;
+      color: $primary-color;
+      font-weight: bold;
+      text-decoration: none;
+      border-bottom: 2px solid $primary-color;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: darken($primary-color, 10%);
+      }
+    }
+
+    .empty-cart {
+      font-size: 18px;
+      color: $text-color;
+    }
+  }
+}

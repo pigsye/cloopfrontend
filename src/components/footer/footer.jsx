@@ -23,6 +23,7 @@ export default function Footer() {
             <li><Link to="/community-events">Community & Events</Link></li>
             <li><Link to="/trade-etiquette">Trade Etiquette</Link></li>
             <li><Link to="/terms-of-service">Terms of Service</Link></li>
+            <li><a className="link-to-backend" href="http://localhost:5174">Backend</a></li>
           </ul>
         </div>
       </div>

@@ -1,116 +1,152 @@
 import React, { useState, useEffect, useRef } from "react";
-import API from "../../api"; // Import API
+import { useNavigate } from "react-router-dom";
+import API from "../../api";
+import { jwtDecode } from "jwt-decode";
 import "./Chat.scss";
 
 export default function Chat() {
-  const userId = 1; // Assume user ID 1 for now
+  const navigate = useNavigate();
+  const chatRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const [userId, setUserId] = useState(null);
   const [chats, setChats] = useState({});
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState({});
   const [input, setInput] = useState("");
-  const [drafts, setDrafts] = useState({}); // Store drafts locally
   const [isChatListOpen, setIsChatListOpen] = useState(false);
-  const chatRef = useRef(null);
-  const inputRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
   const toggleChatList = () => {
     setIsChatListOpen((prev) => !prev);
   };
 
-  // Fetch all chat contacts
+  // ✅ Decode JWT Token and Set User ID
   useEffect(() => {
-    async function fetchChats() {
-      try {
-        const response = await API.get(`/chats/${userId}`);
-        setChats(response.data.chats);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.warn("❌ No token found, redirecting to login.");
+      navigate("/login");
+      return;
+    }
 
-        if (Object.keys(response.data.chats).length > 0) {
-          setCurrentChat(Object.keys(response.data.chats)[0]); // Select first chat
+    try {
+      const decoded = jwtDecode(token);
+      console.log("✅ Decoded token:", decoded);
+
+      if (!decoded.sub || !decoded.sub.id) {
+        throw new Error("Invalid token format (Missing user ID).");
+      }
+
+      setUserId(decoded.sub.id);
+    } catch (err) {
+      console.error("❌ JWT decoding failed:", err);
+      localStorage.removeItem("token");
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  // ✅ Fetch Chats (Prevent Multiple Calls)
+  useEffect(() => {
+    if (!userId) return;
+    let isMounted = true;
+
+    async function fetchChats() {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const response = await API.get("/chats", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (isMounted) {
+          setChats(response.data.chats);
+          if (Object.keys(response.data.chats).length > 0) {
+            setCurrentChat(Object.keys(response.data.chats)[0]); // Set first chat as active
+          }
         }
       } catch (err) {
-        console.error("Failed to load chat contacts:", err);
+        console.error("❌ Failed to load chats:", err.response || err);
       }
     }
 
     fetchChats();
-  }, []);
+    return () => {
+      isMounted = false; // Cleanup to prevent extra calls
+    };
+  }, [userId]);
 
-  // Fetch chat messages when chat changes
+  // ✅ Fetch Messages When Chat Changes
   useEffect(() => {
-    async function fetchChatMessages() {
-      if (!currentChat) return;
+    if (!currentChat) return;
+    let isMounted = true;
+
+    async function fetchMessages() {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       try {
-        const response = await API.get(`/chats/${userId}/${currentChat}`);
-        setMessages((prev) => ({
-          ...prev,
-          [currentChat]: response.data.logs || [],
-        }));
+        const response = await API.get(`/chats/${currentChat}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (isMounted) {
+          setMessages((prev) => ({
+            ...prev,
+            [currentChat]: response.data.logs || [],
+          }));
+        }
       } catch (err) {
-        console.error("Failed to load messages:", err);
+        console.error("❌ Failed to load messages:", err.response || err);
       }
     }
 
-    fetchChatMessages();
+    fetchMessages();
+    return () => {
+      isMounted = false; // Prevent duplicate requests
+    };
   }, [currentChat]);
 
-  // Scroll to the bottom whenever messages update
-  useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-  // Switch Chat & Restore Drafts
-  const handleChatClick = (chatId) => {
-    if (currentChat) {
-      setDrafts((prev) => ({ ...prev, [currentChat]: input })); // Save draft
-    }
-
-    setCurrentChat(chatId);
-    setInput(drafts[chatId] || ""); // Restore draft for new chat
-    setIsChatListOpen(false);
-
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, 50);
-  };
-
-  // Send a message locally (without API call)
-  const sendMessage = () => {
+  // ✅ Send Message
+  const sendMessage = async () => {
     if (!currentChat || input.trim() === "") return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-    setMessages((prev) => ({
-      ...prev,
-      [currentChat]: [...(prev[currentChat] || []), { user: userId, timestamp: Date.now(), message: input }],
-    }));
+    try {
+      await API.post(
+        `/chats/${currentChat}`,
+        { message: input },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    setDrafts((prev) => ({ ...prev, [currentChat]: "" })); // Clear draft
-    setInput("");
-    inputRef.current.focus();
+      setMessages((prev) => ({
+        ...prev,
+        [currentChat]: [
+          ...(prev[currentChat] || []),
+          { user: userId, message: input, timestamp: Date.now() },
+        ],
+      }));
 
-    setTimeout(() => {
-      if (chatRef.current) {
-        chatRef.current.scrollTop = chatRef.current.scrollHeight;
-      }
-    }, 50);
+      setInput("");
+    } catch (err) {
+      console.error("❌ Failed to send message:", err);
+    }
   };
 
   return (
     <main className="chatpage">
-      {/* Toggle Button for Mobile */}
       <button className="chat-toggle-btn" onClick={toggleChatList}>
         {isChatListOpen ? "Close Chats" : "Open Chats"}
       </button>
 
-      {/* Chat List */}
       <div className={`chat-list ${isChatListOpen ? "open" : ""}`}>
         {Object.entries(chats).map(([otherUserId, data]) => (
           <div
             className={`chat-list-item ${currentChat === otherUserId ? "active" : ""}`}
             key={otherUserId}
-            onClick={() => handleChatClick(otherUserId)}
+            onClick={() => setCurrentChat(otherUserId)}
           >
             <img src={`https://via.placeholder.com/40`} alt="user" />
             <span>@{data.username}</span>
@@ -118,7 +154,6 @@ export default function Chat() {
         ))}
       </div>
 
-      {/* Chat Box */}
       <div className="chat-box">
         <div className="chat-header">
           {currentChat ? `Chat with @${chats[currentChat]?.username}` : "Select a chat"}
