@@ -1,8 +1,29 @@
-# React + Vite
+# 🛍️ Cloop User-End (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **user-facing frontend** for Cloop, a clothing swap platform. Built using **React** and **Vite**, it connects with the Flask backend.
 
-Currently, two official plugins are available:
+## 📌 Requirements
+- **Node.js** (v18+ recommended)
+- **npm**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Setup & Installation
+1. **Clone the repository**  
+   ```bash
+   git clone https://github.com/pigsye/cloopfrontend
+   cd cloopfrontend
+
+2. **Install Dependencies**
+   ```bash
+   npm install
+
+3. **Start Development Server**
+   ```bash
+   npm run dev
+
+## 🔗 API Connection
+
+Make sure the Flask backend is running before using the frontend. Update the API base URL in src/api.jsx if necessary.
+
+## 🛠️ Development Notes
+	•	The User-End server must be started before the Admin-End server.
+	•	The app runs on http://localhost:5173 by default.
