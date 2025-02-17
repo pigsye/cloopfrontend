@@ -13,6 +13,21 @@ export default function AddItem() {
     }
   }, []);
 
+  const [showSizeChart, setShowSizeChart] = useState(false);
+
+  const sizeChartData = {
+    "Men's Shirts": [
+      { size: "S", chest: "34-36", length: "28" },
+      { size: "M", chest: "38-40", length: "29" },
+      { size: "L", chest: "42-44", length: "30" },
+    ],
+    "Women's Dresses": [
+      { size: "XS", bust: "32", waist: "24", hips: "34" },
+      { size: "S", bust: "34", waist: "26", hips: "36" },
+      { size: "M", bust: "36", waist: "28", hips: "38" },
+    ]
+  };
+
   const [availableTags, setAvailableTags] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -142,6 +157,41 @@ export default function AddItem() {
             </div>
           </div>
         </section>
+
+        <div className="size-chart-section">
+          <h3>Size Chart</h3>
+          <button type="button" onClick={() => setShowSizeChart(!showSizeChart)}>
+            {showSizeChart ? "Hide Size Chart" : "Show Size Chart"}
+          </button>
+
+          {showSizeChart && (
+            <div className="size-chart">
+              {Object.keys(sizeChartData).map((category) => (
+                <div key={category} className="size-category">
+                  <h4>{category}</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        {Object.keys(sizeChartData[category][0]).map((header) => (
+                          <th key={header}>{header}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sizeChartData[category].map((item, index) => (
+                        <tr key={index}>
+                          {Object.values(item).map((value, index2) => (
+                            <td key={index2}>{value}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         <section className="item-details">
           <h2>Item details</h2>
